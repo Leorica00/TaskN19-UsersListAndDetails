@@ -14,6 +14,7 @@ import com.example.taskn19.databinding.FragmentUserDetailsBinding
 import com.example.taskn19.domain.model.User
 import com.example.taskn19.presentation.BaseFragment
 import com.example.taskn19.presentation.user_details.event.UserDetailsEvent
+import com.example.taskn19.presentation.user_details.viewmodel.UserDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

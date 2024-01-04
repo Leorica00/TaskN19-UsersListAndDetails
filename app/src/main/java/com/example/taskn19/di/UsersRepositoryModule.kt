@@ -17,6 +17,10 @@ object UsersRepositoryModule {
 
     @Singleton
     @Provides
-    fun provideWallpaperRepository(usersApiService: UsersApiService, userDetailsApiService: UserDetailsApiService): UsersRepository = UsersRepositoryImpl(usersApiService = usersApiService, userDetailsApiService = userDetailsApiService, handleResponse = HandleResponse())
-
+    fun provideWallpaperRepository(usersApiService: UsersApiService, userDetailsApiService: UserDetailsApiService):
+            UsersRepository = UsersRepositoryImpl(
+                usersApiService = usersApiService,
+                userDetailsApiService = userDetailsApiService,
+                handleResponse = HandleResponse()
+            )
 }
