@@ -43,7 +43,6 @@ class UsersFragment : BaseFragment<FragmentUsersBinding>(FragmentUsersBinding::i
                 changeVisibility(btnRetry, tvErrorMessage)
             }
         }
-
     }
 
     override fun setUpObservers() {

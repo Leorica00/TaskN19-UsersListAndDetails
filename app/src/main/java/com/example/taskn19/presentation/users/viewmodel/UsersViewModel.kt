@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.taskn19.data.common.Resource
 import com.example.taskn19.domain.model.User
-import com.example.taskn19.domain.usecaseimpl.UsersUseCase
+import com.example.taskn19.domain.usecase.UsersUseCase
 import com.example.taskn19.presentation.users.event.UsersEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +26,7 @@ class UsersViewModel @Inject constructor(private val usersUseCase: UsersUseCase)
 
     private fun setData() {
         viewModelScope.launch {
-            usersUseCase.execute(Unit).collect {
+            usersUseCase.getUsers().collect {
                 _usersStateFlow.value = when (it) {
                     is Resource.Loading -> Resource.Loading(it.loading)
                     is Resource.Success -> Resource.Success(it.successData!!)

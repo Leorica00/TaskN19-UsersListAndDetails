@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.taskn19.data.common.Resource
 import com.example.taskn19.domain.model.User
-import com.example.taskn19.domain.usecaseimpl.UserDetailsUseCase
+import com.example.taskn19.domain.usecase.UserDetailsUseCase
 import com.example.taskn19.presentation.user_details.event.UserDetailsEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +28,7 @@ class UserDetailsViewModel @Inject constructor(private val userDetailsUseCase: U
 
     private fun getUserDetails(userId: Int) {
         viewModelScope.launch {
-            userDetailsUseCase.execute(params = userId).collect {
+            userDetailsUseCase.getUserDetails(userId = userId).collect {
                 _userDetailsStateFlow.value = when (it) {
                     is Resource.Loading -> Resource.Loading(it.loading)
                     is Resource.Success -> Resource.Success(it.successData!!)
