@@ -8,8 +8,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskn19.data.common.Resource
 import com.example.taskn19.databinding.FragmentUsersBinding
-import com.example.taskn19.domain.model.User
 import com.example.taskn19.presentation.BaseFragment
+import com.example.taskn19.presentation.model.User
 import com.example.taskn19.presentation.users.adapter.UsersRecyclerViewAdapter
 import com.example.taskn19.presentation.users.event.UsersEvent
 import com.example.taskn19.presentation.users.listener.UserItemClickListener
@@ -43,6 +43,10 @@ class UsersFragment : BaseFragment<FragmentUsersBinding>(FragmentUsersBinding::i
                 changeVisibility(btnRetry, tvErrorMessage)
             }
         }
+
+        deleteSelectedUsers()
+
+        onSwipeRefreshListener()
     }
 
     override fun setUpObservers() {
@@ -56,13 +60,33 @@ class UsersFragment : BaseFragment<FragmentUsersBinding>(FragmentUsersBinding::i
     private fun handleResource(resource: Resource<List<User>>) {
         when (resource) {
             is Resource.Loading -> binding.progressBarUsers.isVisible = resource.loading
-            is Resource.Success -> usersAdapter.submitList(resource.successData)
+            is Resource.Success -> {
+                with(binding) {
+                    imageButtonDeleteUsers.isVisible = usersViewModel.onEvent(UsersEvent.CheckIfAnyUserIsChecked)
+                    progressBarUsers.isVisible = false
+                }
+                usersAdapter.submitList(resource.successData)
+                binding.swipeRefreshLayoutContainer.isRefreshing = false
+            }
             is Resource.Error -> {
                 with(binding) {
                     changeVisibility(tvErrorMessage, btnRetry)
                     tvErrorMessage.text = resource.errorMessage
+                    binding.swipeRefreshLayoutContainer.isRefreshing = false
                 }
             }
+        }
+    }
+
+    private fun deleteSelectedUsers() {
+        binding.imageButtonDeleteUsers.setOnClickListener {
+            usersViewModel.onEvent(UsersEvent.DeleteSelectedUsers)
+        }
+    }
+
+    private fun onSwipeRefreshListener() {
+        binding.swipeRefreshLayoutContainer.setOnRefreshListener {
+            usersViewModel.onEvent(UsersEvent.FetchData)
         }
     }
 
@@ -72,5 +96,9 @@ class UsersFragment : BaseFragment<FragmentUsersBinding>(FragmentUsersBinding::i
                 userId = userId
             )
         )
+    }
+
+    override fun onUserItemLongClick(userId: Int) {
+        usersViewModel.onEvent(UsersEvent.SelectUser(userId))
     }
 }

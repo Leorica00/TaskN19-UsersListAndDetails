@@ -46,6 +46,8 @@ android {
 
 dependencies {
 
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
     implementation("androidx.core:core-splashscreen:1.0.1")
 
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")

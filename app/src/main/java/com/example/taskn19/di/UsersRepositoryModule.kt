@@ -1,7 +1,7 @@
 package com.example.taskn19.di
 
 import com.example.taskn19.data.common.HandleResponse
-import com.example.taskn19.data.repositoryImpl.UsersRepositoryImpl
+import com.example.taskn19.data.repository.UsersRepositoryImpl
 import com.example.taskn19.data.service.UserDetailsApiService
 import com.example.taskn19.data.service.UsersApiService
 import com.example.taskn19.domain.repository.UsersRepository
@@ -17,7 +17,7 @@ object UsersRepositoryModule {
 
     @Singleton
     @Provides
-    fun provideWallpaperRepository(usersApiService: UsersApiService, userDetailsApiService: UserDetailsApiService):
+    fun provideUsersRepository(usersApiService: UsersApiService, userDetailsApiService: UserDetailsApiService):
             UsersRepository = UsersRepositoryImpl(
                 usersApiService = usersApiService,
                 userDetailsApiService = userDetailsApiService,
