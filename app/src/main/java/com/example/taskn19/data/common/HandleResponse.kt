@@ -18,8 +18,6 @@ class HandleResponse {
             }
         } catch (t: Throwable) {
             emit(Resource.Error(message = AppError.fromException(t).message, throwable = t))
-        } finally {
-            emit(Resource.Loading(false))
         }
     }
 }

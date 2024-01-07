@@ -11,8 +11,8 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.taskn19.data.common.Resource
 import com.example.taskn19.databinding.FragmentUserDetailsBinding
-import com.example.taskn19.domain.model.User
 import com.example.taskn19.presentation.BaseFragment
+import com.example.taskn19.presentation.model.User
 import com.example.taskn19.presentation.user_details.event.UserDetailsEvent
 import com.example.taskn19.presentation.user_details.viewmodel.UserDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,6 +58,7 @@ class UserDetailsFragment :
             is Resource.Success -> {
                 makeTextViewsVisible()
                 resource.successData?.let { setUpUserDataOnTextViews(it) }
+                binding.progressBarUserDetails.isVisible = false
             }
             is Resource.Error -> {
                 with(binding) {
@@ -68,12 +69,12 @@ class UserDetailsFragment :
         }
     }
 
-    private fun setUpUserDataOnTextViews(user: User) {
+    private fun setUpUserDataOnTextViews(getUser: User) {
         with(binding) {
-            tvNameUser.text = user.firstName
-            tvLastNameUser.text = user.lastName
-            tvEmailUser.text = user.email
-            Glide.with(requireContext()).load(user.avatar).into(imageViewAvatar)
+            tvNameUser.text = getUser.firstName
+            tvLastNameUser.text = getUser.lastName
+            tvEmailUser.text = getUser.email
+            Glide.with(requireContext()).load(getUser.avatar).into(imageViewAvatar)
         }
     }
 
