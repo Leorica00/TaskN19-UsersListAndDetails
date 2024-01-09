@@ -1,9 +1,11 @@
 package com.example.taskn19.di
 
-import com.example.taskn19.Constants.USERS_BASE_URL
-import com.example.taskn19.Constants.USER_DETAILS_BASE_URL
-import com.example.taskn19.data.service.UserDetailsApiService
+import com.example.taskn19.BuildConfig
 import com.example.taskn19.data.service.UsersApiService
+import com.example.taskn19.domain.repository.UsersRepository
+import com.example.taskn19.domain.usecase.DeleteUserUseCase
+import com.example.taskn19.domain.usecase.UserDetailsUseCase
+import com.example.taskn19.domain.usecase.UsersUseCase
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -12,22 +14,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class UsersRetrofit
-
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class UserDetailsRetrofit
-
-
 
     @Provides
     @Singleton
@@ -37,10 +28,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    @UsersRetrofit
+    @MockyUsersRetrofit
     fun provideUsersRetrofitClient(moshi: Moshi): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(USERS_BASE_URL)
+            .baseUrl(BuildConfig.USERS_MOCKY_BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
@@ -48,23 +39,43 @@ object AppModule {
 
     @Provides
     @Singleton
-    @UserDetailsRetrofit
+    @ReqresUsersRetrofit
     fun provideUserDetailsRetrofitClient(moshi: Moshi): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(USER_DETAILS_BASE_URL)
+            .baseUrl(BuildConfig.USERS_REQRES_BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideUsersApiService(@UsersRetrofit retrofit: Retrofit): UsersApiService {
+    @MockyUsersService
+    fun provideUsersApiService(@MockyUsersRetrofit retrofit: Retrofit): UsersApiService {
         return retrofit.create(UsersApiService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideUserDetailsApiService(@UserDetailsRetrofit retrofit: Retrofit): UserDetailsApiService {
-        return retrofit.create(UserDetailsApiService::class.java)
+    @ReqresUsersService
+    fun provideUserDetailsApiService(@ReqresUsersRetrofit retrofit: Retrofit): UsersApiService {
+        return retrofit.create(UsersApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUsersUseCase(@MockyUsersRepository usersRepository: UsersRepository): UsersUseCase {
+        return UsersUseCase(usersRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserDetailsUseCase(@ReqresUsersRepository usersRepository: UsersRepository): UserDetailsUseCase {
+        return UserDetailsUseCase(usersRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteUserUseCase(@ReqresUsersRepository usersRepository: UsersRepository): DeleteUserUseCase {
+        return DeleteUserUseCase(usersRepository)
     }
 }

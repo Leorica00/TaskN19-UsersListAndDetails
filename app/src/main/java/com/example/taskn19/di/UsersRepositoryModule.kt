@@ -2,7 +2,6 @@ package com.example.taskn19.di
 
 import com.example.taskn19.data.common.HandleResponse
 import com.example.taskn19.data.repository.UsersRepositoryImpl
-import com.example.taskn19.data.service.UserDetailsApiService
 import com.example.taskn19.data.service.UsersApiService
 import com.example.taskn19.domain.repository.UsersRepository
 import dagger.Module
@@ -17,10 +16,18 @@ object UsersRepositoryModule {
 
     @Singleton
     @Provides
-    fun provideUsersRepository(usersApiService: UsersApiService, userDetailsApiService: UserDetailsApiService):
-            UsersRepository = UsersRepositoryImpl(
+    @MockyUsersRepository
+    fun provideUsersRepository(@MockyUsersService usersApiService: UsersApiService): UsersRepository =
+        UsersRepositoryImpl(
                 usersApiService = usersApiService,
-                userDetailsApiService = userDetailsApiService,
                 handleResponse = HandleResponse()
             )
+
+    @Singleton
+    @Provides
+    @ReqresUsersRepository
+    fun provideUserRepository(@ReqresUsersService usersApiService: UsersApiService): UsersRepository = UsersRepositoryImpl(
+        usersApiService = usersApiService,
+        handleResponse = HandleResponse()
+    )
 }

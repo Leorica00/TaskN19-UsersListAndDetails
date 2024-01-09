@@ -21,7 +21,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "USERS_MOCKY_BASE_URL", "\"https://run.mocky.io/v3/\"")
+            buildConfigField("String", "USERS_REQRES_BASE_URL", "\"https://reqres.in/api/\"")
+        }
         release {
+            buildConfigField("String", "USERS_MOCKY_BASE_URL", "\"https://run.mocky.io/v3/\"")
+            buildConfigField("String", "USERS_REQRES_BASE_URL", "\"https://reqres.in/api/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -38,6 +44,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
     kapt {
         correctErrorTypes = true
